@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>Fluffbug</title>
+<script type="text/javascript">
+function go(url) {
+    req = new XMLHttpRequest();
+    req.open("GET", url);
+    req.send();
+}
+</script>
+<center>
+    <button onclick="go('f')">Forward</button><br/>
+    <button onclick="go('l')">Left</button>
+    <button onclick="go('r')">Right</button><br/>
+    <button onclick="go('s')">Stop</button>
+</center>
