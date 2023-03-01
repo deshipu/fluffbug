@@ -40,6 +40,7 @@ async def serve(walk):
     gait = walk
     name = settings.NET_NAME
     password = settings.NET_PASS
+    wifi.radio.tx_power = 5
     wifi.radio.start_ap(name, password)
     address = str(wifi.radio.ipv4_address_ap)
     http.start(address, port=80, root_path='/static/')
