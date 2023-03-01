@@ -3,7 +3,10 @@ import asyncio
 
 
 HEIGHT = 20
-NEXT_LEG = (2, 3, 1, 0)
+WALK_ORDER = (2, 3, 1, 0)
+#WALK_ORDER = (2, 0, 3, 1)
+LEFT_ORDER = (1, 3, 0, 2)
+RIGHT_ORDER = (2, 0, 3, 1)
 TICK = 0.04
 LEG_TILT = (1, -1, 1, -1)
 
@@ -11,25 +14,29 @@ LEG_TILT = (1, -1, 1, -1)
 class Walk:
     def __init__(self):
         self.on_ground = set(robot.LEGS)
-        self.speed_left = 2.5
-        self.speed_right = 2.5
+        self.speed_left = 2.0
+        self.speed_right = 2.0
+        self.leg_order = WALK_ORDER
         self.command = None
 
     def do_command(self):
         if self.command is None:
             return
         elif self.command == 'f':
-            self.speed_left = 2.5
-            self.speed_right = 2.5
+            self.speed_left = 2.0
+            self.speed_right = 2.0
+            self.leg_order = WALK_ORDER
         elif self.command == 's':
             self.speed_left = 0
             self.speed_right = 0
         elif self.command == 'r':
-            self.speed_left = -1
-            self.speed_right = 1
+            self.speed_left = -1.0
+            self.speed_right = 1.0
+            self.leg_order = RIGHT_ORDER
         elif self.command == 'l':
-            self.speed_left = 1
-            self.speed_right = -1
+            self.speed_left = 1.0
+            self.speed_right = -1.0
+            self.leg_order = LEFT_ORDER
         self.command = None
 
     async def init(self):
@@ -76,9 +83,9 @@ class Walk:
         await asyncio.sleep(TICK)
         leg.move(x=speed * 6)
         await asyncio.sleep(TICK)
-        leg.move(x=0)
+        leg.move(x=-speed * 2)
         await asyncio.sleep(TICK)
-        leg.move(x=-speed * 12)
+        leg.move(x=-speed * 14)
         await asyncio.sleep(TICK)
         leg.move(x=-speed * 16)
         await asyncio.sleep(TICK)
@@ -99,7 +106,7 @@ class Walk:
                     await self.do_tilt(tilt)
                 await asyncio.sleep(TICK)
                 continue
-            leg_number = NEXT_LEG[leg_number]
+            leg_number = self.leg_order[leg_number]
             leg = robot.LEGS[leg_number]
             tilt = -LEG_TILT[leg_number]
             if tilt != prev_tilt:

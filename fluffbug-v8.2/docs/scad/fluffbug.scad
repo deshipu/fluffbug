@@ -164,23 +164,25 @@ module Servo(angle) {
     SG90();
 }
 
-module Leg() {
+module Leg(hip=0, knee=0) {
     translate([-41, 0, 0]) {
-        translate([0, 0, -$explode]) {
-            translate([0, 0, -$explode]) Servo(0);
+        translate([41, 0, 3 - $explode]) rotate(-hip) translate([-41, 0, -3]) {
+            translate([0, 0, -$explode]) rotate(-knee) Servo(knee);
             translate([-0.5, -0.25, 1.5]) Femur();
             translate([10, 0, 1 + $explode * 2]) leg_screw();
             translate([6, 0, 1 + $explode * 2]) leg_screw();
             translate([35, 0, 2 - $explode * 2]) rotate([0, 180, 0]) leg_screw();
             translate([31, 0, 2 - $explode * 2]) rotate([0, 180, 0]) leg_screw();
-            translate([0, 0, -7.9]) Tibia();
-            translate([0, 0, -$explode * 2]) {
-                translate([0, 8.3, -8.5]) rotate([180, 0, 0]) SG90_mount_screw();
-                translate([0, -19.1, -8.5]) rotate([180, 0, 0]) SG90_mount_screw();
+            rotate(-knee) {
+                translate([0, 0, -7.9]) Tibia();
+                translate([0, 0, -$explode * 2]) {
+                    translate([0, 8.3, -8.5]) rotate([180, 0, 0]) SG90_mount_screw();
+                    translate([0, -19.1, -8.5]) rotate([180, 0, 0]) SG90_mount_screw();
+                }
             }
         }
         translate([41, 0, 3]) rotate([180, 0, 0]) {
-            Servo(180);
+            Servo(180 + hip);
             translate([0, 0, $explode]) {
                 translate([0, 8.3, -12.6]) SG90_mount_screw();
                 translate([0, -19.1, -12.6]) SG90_mount_screw();
